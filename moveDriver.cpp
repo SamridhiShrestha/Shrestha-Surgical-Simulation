@@ -79,3 +79,54 @@ void Move::setpoint(int pointOne)
 {
         point = pointOne;   
 }
+
+
+void Move::cutMove()
+{
+   int cuts;
+   char input;  
+
+   cout << "Make ten executive cuts using the | key to represent each cut made." << endl; 
+   cout <<" _______________________________________________________________________" << endl; 
+   cout << "                              SURGERY AREA                             " << endl; 
+   while(cuts < 10)
+   {       cout << "                             " << endl; 
+           cin >> input; 
+           cuts++; 
+   }
+   cout <<" _______________________________________________________________________" << endl;
+}
+
+void Move::cleanMove()
+{
+   int clean;
+   char input;  
+
+   cout << "Make ten executive cuts using the C key to represent each wipe made." << endl; 
+   cout <<" _______________________________________________________________________" << endl; 
+   cout << "                              SURGERY AREA                             " << endl; 
+   while(clean < 10)
+   {
+           cout << "                             " << endl; 
+           cin >> input; 
+           clean++; 
+   }
+   cout <<" _______________________________________________________________________" << endl;
+}
+
+void Move::stitchMove()
+{
+   int stiches;
+   char input;  
+
+   cout << "Make ten executive cuts using the X key to represent each stitch made followed by enter." << endl; 
+   cout <<" _______________________________________________________________________" << endl; 
+   cout << "                              SURGERY AREA                             " << endl; 
+   while(stiches < 10)
+   {
+           cout << "                           " << endl; 
+           cin >> input; 
+           stiches++; 
+   }
+   cout <<" _______________________________________________________________________" << endl;
+}

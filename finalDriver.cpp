@@ -10,17 +10,20 @@
 #include "time.h"
 #include "device.h"
 #include "move.h"
+#include "game.h"
 #include <iostream>
 #include <cmath>
 #include <fstream> 
 #include <unistd.h>
+#include <cmath> 
 
 
 using namespace std;
 
-// MANIPULATE SO THAT IT IS FITTING TO WHAT I AM DOING 
+//Slow Print Function 
 void slowPrint(unsigned long speed, const char *s)
  {
+     
     int i = 0;
     while(s[i]!=0) {
         cout << s[i++];
@@ -30,92 +33,44 @@ void slowPrint(unsigned long speed, const char *s)
 
 }
 
-int split(string split, char seperator, string array[], int arrayNum)
-{  
-    // We need to check for a seperator
-    int i; 
-    int a = 0; 
-    bool found = false; // we have to check whether there is a delimiter present or not 
-
-
-        while( a < split.size() && found == false) // this is going through all of the indexes to make sure there is a delimiter present 
-        {
-
-            if(split[a] == seperator){ // if there is a seperator found we return the value as true 
-                found = true; 
-            }else{
-                a++; // if not we keep searching the string till there is one or it terminates and ends as a false value 
-            }
-
-        }
-
-
-        // The string is split into more pices than the array
-        // cout << " a value:" << a << endl; // testing 
-        // cout << found << endl; // prints 0
-
-            
-        int j = -1;
-        int b = 0;
-
-        if(found == true) // in the event there is a delimiter the following code will execute 
-        {
-            //Start to extract the strings and assign them to array variables 
-            for( int i = 0; i <= split.length(); i++)  // we are going through all of the values and printing out only the sperated strings 
-            
-            {
-
-            
-                if(split[i] == seperator)
-
-                {   
-                        
-                    string temp = split.substr(j + 1 , i - (j + 1)); // this is creating the new substrings from the original strings 
-                    j = i; 
-                    array[b] = temp; 
-                    b++; // we are also counting how many seperated strings or how many arrays are now present 
-                } 
-
-
-            }
-            
-            
-            string temp = split.substr(j + 1 , i - (j + 1)); // this is taking care of the edge case where there isnt a delimiter at the end 
-            
-
-                if(temp != "") // nwe are taking care of this by essentially telling it to create a index variable when it reaches the end 
-
-                {
-                    array[b] = temp;  
-                    b++; 
-                }
-
-
-                if( b > arrayNum) // this is for the case that the number of values are bigger than the capacity of the array or not 
-                {
-                    return -1; // if it is then it prints -1 
-
-                }else{ 
-
-                    return b; // if it is normal than it just prints the total number of arrays 
-
-                }
-                
-
-        }else if(split.size() > 1 && found == 0){ // this is for the edge case that the character is empty 
+//Split Function 
+int split(string text, char separator, string array[], int size){
     
-            return 0; 
+    int deli_count = 0;   //the number of separators
+    int array_num = 0;   //the number of elememts in array
 
-        }else{ 
-
-
-            // Return 1 an put the entire string as the first variable of the array
-            array[b] = split;
-            return 1;
+    for (int i = 0; i < size; i++)
+        array[i].clear();
+    
+    for (int i = 0; i< text.length(); i++) {
+        if(text[i] == separator){
+            
+            //Increase deli_count by 1 
+            deli_count++;
+            array_num = deli_count + 1;
+            //If the the number of elements in array is greater than the size of array, return -1
+            if (array_num  > size)
+                return -1;
 
         }
+        //If text[i] is not a separator, save the characters (text[i]) in order.
+        else {
+            array[deli_count].append(1, text[i]);
+           
+        }
+        
+    }
 
+    //If there's no seperator in the text, save text in array[0] and return 1
+    if (text.length() != 0 && deli_count == 0) {
+        array[0] = text;
+        return 1;
+    }
 
+   // cout << "split issue" << endl; 
+    return array_num;
+
+    
 }
 
 //Constructors:
@@ -125,75 +80,126 @@ Driver::Driver()
     // Empty constructor for all of theses values for they have pre-set values 
 } 
 
-// parameterized constructor
-Driver::Driver(string patient[], int curtimeLeft, bool curStable, bool deviceStatus, bool cursurgerySuccess)
+void Driver::successStorage(string surgeonName,string patient, int surgeonYear)
 {
+    cout << "Congraulations!The surgery was a success and " << patient << " will be placed into the ICU to recover!" << endl; 
+    ofstream myfile;
 
-        stable = curStable; 
-        surgerySuccess = cursurgerySuccess; 
-} 
+    myfile.open ("surgeoninfo.txt",ios::app);
+    myfile << "--------------------------------" << endl;
+    myfile << "Surgeon: " << surgeonName << endl;
+    myfile << "Year of Medschool: " << surgeonYear << endl;
+    myfile << "Status of Surgery: Success" << endl; 
+    myfile << "--------------------------------" << endl;
 
-
-// Getters (or accessors)
-string Driver::getpatient(int patindex)
-{
-    return patient[patindex].getpatientName(); 
+    myfile.close();
 }
 
-int Driver::gettimeLeft()
+void Driver::failureStorage(string surgeonName,string patient, int surgeonYear)
 {
-    return 0; 
+    cout << "A gloomy day has cast over the Shrestha Surgical Simulation, we have lost our patient " << patient << " ." << endl;
+    ofstream myfile;
+    myfile.open ("surgeoninfo.txt",ios::app);
+    myfile << "--------------------------------" << endl;
+    myfile << "Surgeon: " << surgeonName << endl;
+    myfile << "Year of Medschool: " << surgeonYear << endl;
+    myfile << "Status of Surgery: Failed" << endl; 
+    myfile << "--------------------------------" << endl;
+    myfile.close();
 }
 
-int Driver::getstable()
+
+void Driver::displayGrandMenu()
 {
-
-    return 0; 
-}
-
-int Driver::getdevicePower()
-{
-    return 0; 
-}
-
-int Driver::getsurgerySuccess()
-{
-    return 0; 
-}
-
-// Setters (or mutators)
-
-void Driver::setstable(bool curStable)
-{
-    stable = curStable; 
-    // This will be updated after each move and update depending on whether a correct move was made or not 
-} 
-
-void Driver::displayDeviceMenu()
-{
-            cout << "---Device Options---" << endl; 
-            cout << "1.Bipolar Instrument" ;
-            cout << "2.Monopolar Instrument" << endl ;
-            cout << "3.Needle Driver" << endl ;
-            cout << "4.Suction Instrument" << endl ;
-            cout << "5.Anesthesia Tube" << endl; 
-            cout << "6.Cleaning Gauze" << endl ;
+            cout << "---Grand Menu---" << endl; 
+            cout << "1)Clean" << endl;
+            cout << "2)Cut" << endl ;
+            cout << "3)Stitch" << endl ;
+            cout << "4)Patient Status" << endl ;
+            cout << "5)Tool Key" << endl; 
+            cout << "6)Quit" << endl ;
 
 }
 
-void Driver::startgame(string surgeonName)
+void Driver::displayCleanMenu()
+{
+    cout << "---Clean Menu---" << endl; 
+    cout << "1)Sanitary Wipe Wand"<< endl; 
+    cout << "2)Suction Instrument" << endl; 
+}
+
+void Driver::displayCutMenu()
+{
+    cout << "---Cut Menu---" << endl; 
+    cout << "1)Bipolar Instrument"<< endl; 
+    cout << "2)Monopolar Instrument" << endl;
+}
+
+void Driver::displayStitchMenu()
+{
+    cout << "---Stitch Menu---" << endl; 
+    cout << "1)Clip Appliers"<< endl; 
+    cout << "2)Needle Drivers" << endl;  
+}
+
+void Driver::chooseMenu(int opt)
+{
+    Driver menu; 
+    Move move; 
+    int tool; 
+
+    switch(opt)
+    {
+        case 1: 
+        menu.displayCleanMenu(); 
+        cout << "Which tool would you like to use?" << endl; 
+        cin >> tool; 
+        move.cleanMove(); 
+        break; 
+
+        case 2: 
+        menu.displayCutMenu(); 
+        cout << "Which tool would you like to use?" << endl; 
+        cin >> tool; 
+        move.cutMove(); 
+        break; 
+
+        case 3: 
+        menu.displayStitchMenu(); 
+        cout << "Which tool would you like to use?" << endl; 
+        cin >> tool; 
+        move.stitchMove(); 
+        break; 
+
+        default: 
+
+        cout << "invalid menu input" << endl; 
+
+    }
+}
+
+
+void Driver::startgame(string surgeonName,int surgeonYear)
 {
     //cout << "error 2" << endl; 
-    Driver deviceMenu; 
+    Driver driver; 
+    Driver tools[6]; 
+    Game game; 
+    int points = 100; 
+    string patientName;
     string line;  
+    int opt; 
+    bool complication = true; 
+    int stage = 0; 
 
     string tempOne[5]; 
     int tempTwo[4]; 
 
     int temp; 
     int index = 0; 
+    
 
-    Patient John; 
+    Patient John;  
     Patient Samantha; 
     Patient Charles; 
 
@@ -208,13 +214,14 @@ void Driver::startgame(string surgeonName)
             {
             
             //cout << "error 5" << endl;
-                split(line, ',', tempOne, 5); 
+                split(line, ',', tempOne, 4); 
+                //cout << "error 6" << endl;
 
-                for(int i = 1; i < 5; i++)
+                for(int i = 1; i < 4; i++)
                 {
                 //Here we are turning values that were originally stored as strings into integer ratings 
                 tempTwo[i-1] = stoi(tempOne[i]);
-
+                //cout << "error 7" << endl;
                 }
 
                 if(index == 0)
@@ -285,6 +292,7 @@ void Driver::startgame(string surgeonName)
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: John Williams" << endl; 
         John.displayPatientProfile(); 
+        patientName = "John";
         cout << "----------------------------------------" << endl; 
 
         break; 
@@ -294,6 +302,7 @@ void Driver::startgame(string surgeonName)
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: Samantha Westworrow" << endl; 
         Samantha.displayPatientProfile(); 
+        patientName = "Samantha";
         cout << "----------------------------------------" << endl; 
         break; 
 
@@ -302,6 +311,7 @@ void Driver::startgame(string surgeonName)
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: Charles Collier" << endl; 
         Charles.displayPatientProfile(); 
+        patientName = "Charles";
         cout << "----------------------------------------" << endl; 
         break; 
 
@@ -314,60 +324,403 @@ void Driver::startgame(string surgeonName)
 
     // S   T   A   G   E        O   N   E ------------------------------------------
     slowPrint(200000, "+++++ S T A G E  O N E +++++\n");
-    // DISPLAY PROMPT 
-    cout << " We must first prepare the patient for general anesthesia and cleanse the area. " << endl;
-    cout << " Please check the patient status and choose the correct tools and moves to follow through with this stage. " << endl;  
-    // -Display Patient Status 
+    stage = 1; 
+    cout << " We must first prepare the patient for general anesthesia and cleanse the area, then" << endl;
+    cout << " prepare the arteries for surgery and extract the appropriate veins " << endl; 
+    cout << "We will be using the veins as bypass grafts, and the heart of the patient will have to be stopped" << endl; 
+
+
+    //TASK I 
+    cout << "First prep the patient by cleaning area directly above their sternum, and make initial incisions in the chest." << endl; 
+    driver.displayGrandMenu(); 
+    cout << "Chose your option:" << endl; 
+    cin >> opt;
+    while (opt == 4 || opt == 5)
+    {
+        if(opt == 4)
+        {
+        
+            switch(optionPat)
+            {
+                case 1: 
+                    John.displayPatientStatus(); 
+                    break; 
+                case 2: 
+                    Samantha.displayPatientStatus(); 
+                    break; 
+                case 3: 
+                    Charles.displayPatientStatus(); 
+                    break; 
+
+                default: 
+                    cout << "Unable to get status." << endl; 
+            }
+
+                driver.displayGrandMenu(); 
+                cout << "Chose your option:" << endl; 
+                cin >> opt;
+
+        }
+
+        if(opt == 5)
+        {
+        
+            ifstream theFile; 
+            theFile.open("toolKey.txt"); 
+            //cout << "error 3" << endl;
+
+            if(theFile.is_open())
+            {
+                //cout << "error 4" << endl;
+                while(getline(theFile,line))
+                {
+                    cout << line << endl; 
+                
+                }
+            }
+
+            theFile.close(); 
+        }
+
+            driver.displayGrandMenu(); 
+            cout << "Chose your option:" << endl; 
+            cin >> opt; 
+    }
+    if(opt == 1)
+    {   
+        driver.chooseMenu(opt);
+        points = points + 5; 
+        cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
+    }
+    else 
+    {
+        cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
+        points = points - 5; 
+    }
+     
+    // COMPLICATION 1 
+    cout << "You have run into your first complication and patient is now unstable. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient" << endl; 
+    int comp = game.randomVal(10,25); 
+
+    if(comp >= 6)
+    {
+        complication = game.complicationMath(stage); 
+    }
+    else if (comp < 6 && comp >= 3)
+    {
+        complication = game.complicationUnscramble(stage); 
+    }
+    else 
+    {
+        complication = game.complicationFacts(stage); 
+    }
+
+    // END STATEMENT 
+    if(complication == false)
+    {
+        cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!" << endl; 
+        points = points + 2; 
+    }
+    else 
+    {
+        cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
+        points = points - 10; 
+    }
+
+    // S   T   A   G   E        T   W   O ------------------------------------------
+    slowPrint(200000, "+++++ S T A G E  T W O +++++\n");
+    stage = 2; 
+    cout << "Next you must now put the bypass grafts in the appropriate places and attach the graft" << endl; 
+    cout << "from the incision below the blocked artery to the incision made in the aorta." << endl; 
+
+    //TASK 1 
+    cout << "Choose the correct action to start the cutting and extraction of the grafts." << endl; 
+    driver.displayGrandMenu(); 
+    cout << "Chose your option:" << endl; 
+    cin >> opt; 
+    while (opt == 4 || opt == 5)
+    {
+        if(opt == 4)
+        {
+        
+            switch(optionPat)
+            {
+                case 1: 
+                    John.displayPatientStatus(); 
+                    break; 
+                case 2: 
+                    Samantha.displayPatientStatus(); 
+                    break; 
+                case 3: 
+                    Charles.displayPatientStatus(); 
+                    break; 
+
+                default: 
+                    cout << "Unable to get status." << endl; 
+            }
+
+                driver.displayGrandMenu(); 
+                cout << "Chose your option:" << endl; 
+                cin >> opt;
+
+        }
+
+        if(opt == 5)
+        {
+        
+            ifstream theFile; 
+            theFile.open("toolKey.txt"); 
+            //cout << "error 3" << endl;
+
+            if(theFile.is_open())
+            {
+                //cout << "error 4" << endl;
+                while(getline(theFile,line))
+                {
+                    cout << line << endl; 
+                
+                }
+            }
+
+            theFile.close(); 
+        }
+
+            driver.displayGrandMenu(); 
+            cout << "Chose your option:" << endl; 
+            cin >> opt; 
+    }
+    if(opt == 2)
+    {   
+        driver.chooseMenu(opt);
+        points = points + 5; 
+        cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
+    }
+    else 
+    {
+        cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
+        points = points - 5; 
+    }
+
+
+    // COMPLICATION 1 
+    cout << "You have run into your second complication and patient is now unstable. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient" << endl; 
+    comp = game.randomVal(10,25); 
+
+    if(comp >= 6)
+    {
+        complication = game.complicationMath(stage); 
+    }
+    else if (comp < 6 && comp >= 3)
+    {
+        complication = game.complicationUnscramble(stage); 
+    }
+    else 
+    {
+        complication = game.complicationFacts(stage); 
+    }
+
+    if(complication == false)
+    {
+        cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!" << endl; 
+        points = points + 2; 
+    }
+    else 
+    {
+        cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
+        points = points - 10; 
+    }
+
+
+    // S   T   A   G   E        T   H   R   E   E ------------------------------------------
+    slowPrint(200000, "+++++ S T A G E  T H R E E +++++\n");
+    stage = 3; 
+    cout << "Lastly, you must enclose the correct pacing wire and chest tubing within the sternum " << endl; 
+    cout << "before completing the surgery and closing the chest incision." << endl; 
+
+    //TASK 1 
+    cout << "Now that the grafts have been put into place, stitcht the patient back up." << endl; 
+    driver.displayGrandMenu(); 
+    cout << "Chose your option:" << endl; 
+    cin >> opt; 
+        while (opt == 4 || opt == 5)
+    {
+        if(opt == 4)
+        {
+        
+            switch(optionPat)
+            {
+                case 1: 
+                    John.displayPatientStatus(); 
+                    break; 
+                case 2: 
+                    Samantha.displayPatientStatus(); 
+                    break; 
+                case 3: 
+                    Charles.displayPatientStatus(); 
+                    break; 
+
+                default: 
+                    cout << "Unable to get status." << endl; 
+            }
+
+                driver.displayGrandMenu(); 
+                cout << "Chose your option:" << endl; 
+                cin >> opt;
+
+        }
+
+        if(opt == 5)
+        {
+        
+            ifstream theFile; 
+            theFile.open("toolKey.txt"); 
+            //cout << "error 3" << endl;
+
+            if(theFile.is_open())
+            {
+                //cout << "error 4" << endl;
+                while(getline(theFile,line))
+                {
+                    cout << line << endl; 
+                
+                }
+            }
+
+            theFile.close(); 
+        }
+
+            driver.displayGrandMenu(); 
+            cout << "Chose your option:" << endl; 
+            cin >> opt; 
+    }
+    if(opt == 3)
+    {   
+        driver.chooseMenu(opt);
+        points = points + 5; 
+        cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
+    }
+    else
+    {
+        cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
+        points = points - 5; 
+    }
+
+    // COMPLICATION 1 
+    cout << "You have run into your first complication and patient is now unstable. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient" << endl; 
+    comp = game.randomVal(10,25);
+
+    if(comp >= 6)
+    {
+        complication = game.complicationMath(stage); 
+    }
+    else if (comp < 6 && comp >= 3)
+    {
+        complication = game.complicationUnscramble(stage); 
+    }
+    else 
+    {
+        complication = game.complicationFacts(stage); 
+    }
+
+    // END STATEMENT 
+    if(complication == false)
+    {
+        cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!" << endl; 
+        points = points + 2; 
+    }
+    else 
+    {
+        cout<< "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
+        points = points - 10; 
+    }
+
+    // DEVICE COMPLICATION 2
+    // cout << "You have run into a device complication and patient is now unstable. " << endl; 
+    // cout << "Please complete the complication task to restabilize the patient" << endl; 
+
+    // if(devComp >= 6)
+    // {
+    //     game.complicationBattery(); 
+    // }
+    // else 
+    // {
+
+    // }
+
+
+    // END STATEMENT 
+    // if(!complication)
+    // {
+    //     cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!(+2pts)" << endl; 
+    // }
+    // else 
+    // {
+    //     cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
+
+    // }
+
+    // F   I   N   A   L 
+    slowPrint(200000, "+++++S U R G E R Y  C O M P L E T E D+++++\n"); 
     switch(optionPat)
     {
-        case 1: 
+         case 1: 
+            John.setlifepoints(John.getlifepoints() + points); 
             John.displayPatientStatus(); 
             break; 
         case 2: 
+            Samantha.setlifepoints(Samantha.getlifepoints() + points); 
             Samantha.displayPatientStatus(); 
             break; 
         case 3: 
+            Charles.setlifepoints(Charles.getlifepoints() + points); 
             Charles.displayPatientStatus(); 
             break; 
 
         default: 
             cout << "Unable to get status." << endl; 
     }
-    // -Display Tools 
-    //Menu.displayDeviceMenu(); 
-    // -Display Display Moves 
 
-            // Display the moves 
-            //     -Cut 
-            //     -Suture 
-            //     -Clean 
-            // Display the devices 
-            //     -Cut 
-            //         -tool 
-            //         -tool 
-            //     -Suture 
-            //         -tool 
-            //         - 
-            //     Clean 
-            //         - 
-            //         - 
-    //Tool Status 
-    //Patient Status 
-    // -Display Prompt 
-    // -Display Tools 
-    // -Display Display Moves 
-    //Display Stable 
+    switch(optionPat)
+    {
+         case 1: 
+            if(John.getlifepoints() + points >= 300)
+            {
+                driver.successStorage(surgeonName,patientName,surgeonYear); 
+            }
+            else
+            { 
+                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+            }; 
+            break; 
+        case 2: 
+            if(Samantha.getlifepoints() + points >= 400)
+            {
+                driver.successStorage(surgeonName,patientName,surgeonYear); 
+            }
+            else
+            {
+                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+            }; 
+            break; 
+        case 3: 
+            if(Charles.getlifepoints() + points >= 500)
+            {
+                driver.successStorage(surgeonName,patientName,surgeonYear); 
+            }
+            else
+            {
+                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+            }; 
+            break; 
 
-    // S   T   A   G   E        T   W   O ------------------------------------------
-    // slowPrint(200000, "+++++ S T A G E  T W O +++++\n");
-    // // S   T   A   G   E        T   H   R   E   E ------------------------------------------
-    // slowPrint(200000, "+++++ S T A G E  T H R E E +++++\n");
-    // // S   T   A   G   E        F   O   U   R ------------------------------------------
-    // slowPrint(200000, "+++++ S T A G E  F O U R +++++\n");
-    // // S   T   A   G   E        F   I   V   E------------------------------------------
-    // slowPrint(200000, "+++++ S T A G E  F I V E +++++\n");
+        default: 
+            cout << "Unable to reach a conclusion." << endl; 
+    }
+   
 
-    // F   I   N   A   L 
 
 
 }

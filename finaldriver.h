@@ -9,40 +9,41 @@
 #include "time.h"
 #include "device.h"
 #include "move.h"
+#include "game.h"
 using namespace std;
 #ifndef DRIVER_H
 #define DRIVER_H
 
 class Driver{
     private:
-        Patient patient[3];
-        static const int size = 3;
+        Device tools[6];
+        static const int size = 6;
         Time timeLeft;
-        bool stable; 
-        // Device devicePower[5]; 
-        bool surgerySuccess; 
+        string surgeonName; 
+        int surgeonYear; 
+        int patindex; 
+        int opt; 
 
     public:
         //Constructors:
         Driver();  //default constructor 
-        Driver(string patient[], int timeLeft, bool stable, bool deviceStatus, bool surgerySuccess);  // parameterized constructor
-
+    
         // Getters (or accessors)
         string getpatient(int patindex);
-        int gettimeLeft(); 
-        int getstable(); 
-        int getdevicePower(); 
-        int getsurgerySuccess(); 
 
-        // Setters (or mutators)
-        void setpatient(); // How do I implement the seperate patient files here? 
-        void settimeLeft(); 
-        void setstable(bool curStable); 
-        void setdevicePower(int devindex, int powVal); 
-        void setsurgerySuccess(bool cursurgerySuccess); 
 
-        void displayDeviceMenu(); 
-        void startgame(string surgeonName); 
+        void displayGrandMenu();
+        void displayCleanMenu(); 
+        void displayCutMenu(); 
+        void displayStitchMenu(); 
+        void chooseMenu(int opt); 
+
+        int randomNum(); 
+
+        void failureStorage(string surgeonName,string patient, int surgeonYear); 
+        void successStorage(string surgeonName, string patient, int surgeonYear); 
+
+        void startgame(string surgeonName,int surgeonYear); 
 };
 
 #endif

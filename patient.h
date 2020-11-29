@@ -39,6 +39,7 @@ class Patient{
 
         void displayPatientStatus(); // Displaying the patient status after every turn 
         void displayPatientProfile(); 
+        
 };
 
 #endif

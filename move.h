@@ -32,6 +32,10 @@ class Move{
         void setprobOfSuccess(int probOne); 
         void setduration(int durOne);
         void setpoint(int pointOne); 
+
+        void cutMove(); 
+        void cleanMove(); 
+        void stitchMove();
 };
 
 #endif

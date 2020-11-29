@@ -1,0 +1,7 @@
+Tool Key (Descriptions)
+-Sanitary Wipe Wand: This is for only external usage and is used to prep the skin before surgery.
+-Suction Instrument: This is for cleaning excess tissue that is found inside of the surgery area. 
+-Biopolar Instrument: A double power tool that is used to cut.
+-Monopolar Instrument: A single power tool that is used to cut.
+-Clip Appliers: This tool is used to staple the area that is opened.
+-Needle Drivers: This is a tool that is used to stitch the area that is opened.

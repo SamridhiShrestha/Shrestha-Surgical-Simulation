@@ -15,16 +15,16 @@ using namespace std;
     Device::Device()//default constructor 
     {
         tool = "";
-        status = true; 
+        devPoint = 0; 
         battery = 100; 
         power = 100;
     }
 
     
-    Device::Device(string toolOne, bool curStatOne, int curBattOne, int powerLvl) //parameterized constructor
+    Device::Device(string toolOne, int devPointOne, int curBattOne, int powerLvl) //parameterized constructor
     {
         tool = toolOne; 
-        status = curStatOne; 
+        devPoint = devPointOne; 
         battery = curBattOne; 
         power = powerLvl; 
 
@@ -38,9 +38,9 @@ using namespace std;
         return tool;
     }
 
-    bool Device::getStatus()
+    bool Device::getdevPoint()
     {
-        return status;
+        return devPoint;
     }
 
     int Device::getBattery()
@@ -60,9 +60,9 @@ using namespace std;
         {
             tool = toolOne; 
         }
-        void Device::setStatus(int curStatOne)
+        void Device::setdevPoint(int devPointOne)
         {
-            status = curStatOne; 
+            devPoint = devPointOne;
         }
 
         void Device::setBattery(int curBattOne)
@@ -75,11 +75,25 @@ using namespace std;
             power = powerLvl; 
         }
 
+        void Device::setCompTools()
+        {
+
+        int Cap = 6; 
+        Device tools[Cap];
+        tools[0] = Device("Sanitary Wipe Wand",1,1,1);
+        tools[1] = Device("Suction Instrument",1,1,1);
+        tools[2] = Device("Bipolacr Instrument",1,1,1);
+        tools[3] = Device("Monopolar Instrument",1,1,1);
+        tools[4] = Device("Clip Appliers",1,1,1);
+        tools[5] = Device("Needle Drivers",1,1,1);
+
+        }
+
         void Device::displayDeviceStats()
         {
             cout << "---Device Stats---" << endl; 
             cout << "Tool: " << getToolName() << endl; 
-            cout << "Status: " << getStatus() << endl; 
+            cout << "Status: " << getdevPoint() << endl; 
             cout << "Battery: " << getBattery() << endl; 
             cout << "Power: " << getPowerLevel() << endl; 
         }

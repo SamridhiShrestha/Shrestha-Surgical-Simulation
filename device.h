@@ -12,27 +12,28 @@ using namespace std;
 class Device{
     private:
         string tool; 
-        bool status; 
+        int devPoint; 
         int battery; 
         int power; 
 
     public:
         //Constructors:
         Device();  //default constructor 
-        Device(string tool, bool status, int battery, int power);  // parameterized constructor
+        Device(string tool, int devPoint, int battery, int power);  // parameterized constructor
 
         // Getters (or accessors)
         string getToolName();
-        bool getStatus(); 
+        bool getdevPoint(); 
         int getBattery(); 
         int getPowerLevel(); 
 
         // Setters (or mutators)
         void setToolName(string toolOne);
-        void setStatus(int curStatOne); 
+        void setdevPoint(int devPointOne); 
         void setBattery(int curBattOne); 
         void setPowerLevel(int powerLvl); 
         
+        void setCompTools(); 
         void displayDeviceStats(); //This will print out the stats for display for the device 
         
 

@@ -41,21 +41,10 @@ int main(){
             cout << "Please enter your year in med school (ex. 2021, 2022...): "; 
             cin >> surgeonYear; 
             cout << endl; 
-
-            //Writes surgeon information to this particular file to store 
-            
-            ofstream myfile;
-            myfile.open ("surgeoninfo.txt");
-            myfile << "--------------------------------" << endl;
-            myfile << "Surgeon: " << surgeonName << endl;
-            myfile << "Year of Medschool: " << surgeonYear << endl;
-            myfile << "--------------------------------" << endl;
-            myfile.close();
-            
-        
+                    
             //Calls the driver to initiate the start of the game
             //cout << "error1" << endl; 
-            newgame.startgame(surgeonName); 
+            newgame.startgame(surgeonName,surgeonYear); 
         }
         else
         {
