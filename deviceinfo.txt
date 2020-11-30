@@ -3,3 +3,10 @@ Monopolar Instrument, Cut, 60, 5, 10
 Clip Appliers, Suture, 80, 10, 10 
 Needle Driver, Suture, 60, 5, 10
 Suction Instrument, Clean, 100, 10, 5 
+
+Sanitary Wipe Wand 
+Suction Instrument 
+Bipolar Instrument 
+Monopolar Instrument 
+Clip Appliers 
+Needle Drivers 

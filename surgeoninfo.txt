@@ -1,35 +1,5 @@
 --------------------------------
-Surgeon: Shresh
-Year of Medschool: 1234
-Status of Surgery: Failed
---------------------------------
---------------------------------
-Surgeon: Shrestha
-Year of Medschool: 1234
-Status of Surgery: Failed
---------------------------------
---------------------------------
-Surgeon: Samri
-Year of Medschool: 1234
-Status of Surgery: Success
---------------------------------
---------------------------------
-Surgeon: Shrestha
-Year of Medschool: 2021
-Status of Surgery: Failed
---------------------------------
---------------------------------
-Surgeon: s
-Year of Medschool: 1
-Status of Surgery: Failed
---------------------------------
---------------------------------
 Surgeon: Shrestha
 Year of Medschool: 2023
 Status of Surgery: Failed
---------------------------------
---------------------------------
-Surgeon: Shrestha
-Year of Medschool: 2028
-Status of Surgery: Success
 --------------------------------

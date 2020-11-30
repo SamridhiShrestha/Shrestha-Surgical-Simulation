@@ -7,8 +7,8 @@
 // This is where we are defining all of our components 
 #include "finaldriver.h" // Include header file
 #include "patient.h"
-#include "time.h"
-#include "device.h"
+//#include "time.h"
+//#include "device.h"
 #include "move.h"
 #include "game.h"
 #include <iostream>
@@ -16,9 +16,55 @@
 #include <fstream> 
 #include <unistd.h>
 #include <cmath> 
+#include <vector>
 
 
 using namespace std;
+
+vector<string> returnLast15(string fn)
+{
+        vector <string> fileResult; 
+        ifstream rdFile; 
+        rdFile.open(fn); 
+        string line; 
+        int count = 0; 
+        int lineNum = 0; 
+        while(getline(rdFile,line))
+        {
+            // cout << "test" << endl; 
+            count++; 
+        }
+
+        rdFile.close(); 
+
+        if(count < 15)
+        {
+            cout << "Not enough information has been stored yet." << endl; 
+            return fileResult; 
+        }
+        else
+        {
+
+        rdFile.open(fn); 
+        while(getline(rdFile,line))
+        {
+            cout << "test1" << endl; 
+            cout << count << endl; 
+            if(lineNum == count - 15)
+            {
+                fileResult.push_back(line); 
+    
+            }
+            else 
+            {
+                lineNum++; 
+            }
+        }
+        return fileResult; 
+        }
+
+    
+ }
 
 //Slow Print Function 
 void slowPrint(unsigned long speed, const char *s)
@@ -84,7 +130,6 @@ void Driver::successStorage(string surgeonName,string patient, int surgeonYear)
 {
     cout << "Congraulations!The surgery was a success and " << patient << " will be placed into the ICU to recover!" << endl; 
     ofstream myfile;
-
     myfile.open ("surgeoninfo.txt",ios::app);
     myfile << "--------------------------------" << endl;
     myfile << "Surgeon: " << surgeonName << endl;
@@ -198,6 +243,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
     int temp; 
     int index = 0; 
     
+// exit(0); 
 
     Patient John;  
     Patient Samantha; 
@@ -720,8 +766,16 @@ void Driver::startgame(string surgeonName,int surgeonYear)
             cout << "Unable to reach a conclusion." << endl; 
     }
    
+   cout << endl; 
+   cout << "Here are your three latest plays..." << endl; 
 
+   vector<string> vectorName = returnLast15("surgeoninfo.txt"); 
 
+   for(unsigned int i = 0; i < vectorName.size(); i++)
+   {
+       cout << vectorName[i] << endl; 
+       cout << endl; 
+   }
 
 }
 
