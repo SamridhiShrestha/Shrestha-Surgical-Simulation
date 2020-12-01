@@ -18,7 +18,6 @@ class Driver{
     private:
         Device tools[6];
         static const int size = 6;
-        Time timeLeft;
         string surgeonName; 
         int surgeonYear; 
         int patindex; 
@@ -39,6 +38,8 @@ class Driver{
         void chooseMenu(int opt); 
 
         int randomNum(); 
+
+        void setCompTools(); 
 
         void failureStorage(string surgeonName,string patient, int surgeonYear); 
         void successStorage(string surgeonName, string patient, int surgeonYear); 

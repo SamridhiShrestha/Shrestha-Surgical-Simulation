@@ -3,3 +3,13 @@ Surgeon: Shrestha
 Year of Medschool: 2023
 Status of Surgery: Failed
 --------------------------------
+--------------------------------
+Surgeon: Shrestha
+Year of Medschool: 2023
+Status of Surgery: Failed
+--------------------------------
+--------------------------------
+Surgeon: Shrestha
+Year of Medschool: 2024
+Status of Surgery: Success
+--------------------------------

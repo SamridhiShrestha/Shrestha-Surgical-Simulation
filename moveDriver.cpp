@@ -90,8 +90,9 @@ void Move::cutMove()
    cout <<" _______________________________________________________________________" << endl; 
    cout << "                              SURGERY AREA                             " << endl; 
    while(cuts < 10)
-   {       cout << "                             " << endl; 
+   {       cout << "                                   "; 
            cin >> input; 
+           cout << endl; 
            cuts++; 
    }
    cout <<" _______________________________________________________________________" << endl;
@@ -103,12 +104,13 @@ void Move::cleanMove()
    char input;  
 
    cout << "Make ten executive cuts using the C key to represent each wipe made." << endl; 
-   cout <<" _______________________________________________________________________" << endl; 
+   cout << " _______________________________________________________________________" << endl; 
    cout << "                              SURGERY AREA                             " << endl; 
    while(clean < 10)
    {
-           cout << "                             " << endl; 
-           cin >> input; 
+           cout << "                                   "; 
+           cin >> input;
+           cout << endl;  
            clean++; 
    }
    cout <<" _______________________________________________________________________" << endl;
@@ -124,8 +126,9 @@ void Move::stitchMove()
    cout << "                              SURGERY AREA                             " << endl; 
    while(stiches < 10)
    {
-           cout << "                           " << endl; 
+           cout << "                                 "; 
            cin >> input; 
+           cout << endl; 
            stiches++; 
    }
    cout <<" _______________________________________________________________________" << endl;

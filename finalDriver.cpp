@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <cmath> 
 #include <vector>
+#include <string> 
 
 
 using namespace std;
@@ -126,6 +127,29 @@ Driver::Driver()
     // Empty constructor for all of theses values for they have pre-set values 
 } 
 
+     void Driver::setCompTools()
+        {
+
+        string line; 
+        ifstream useFile; 
+        int count = 0; 
+        useFile.open("deviceinfo.txt"); 
+        while(getline(useFile, line))
+        {
+            
+            string finaltools[4]; 
+            split(line,',',finaltools,4); 
+            for(int i = 0; i < 4; i++ )
+            {
+                cout << finaltools[i] << endl; 
+            }
+            tools[count] = Device(finaltools[0], stoi(finaltools[1]), stoi(finaltools[2]), stoi(finaltools[3])); 
+            count++; 
+
+        }
+
+        }
+
 void Driver::successStorage(string surgeonName,string patient, int surgeonYear)
 {
     cout << "Congraulations!The surgery was a success and " << patient << " will be placed into the ICU to recover!" << endl; 
@@ -216,6 +240,11 @@ void Driver::chooseMenu(int opt)
         move.stitchMove(); 
         break; 
 
+        case 6: 
+        return; 
+
+        break; 
+
         default: 
 
         cout << "invalid menu input" << endl; 
@@ -226,10 +255,9 @@ void Driver::chooseMenu(int opt)
 
 void Driver::startgame(string surgeonName,int surgeonYear)
 {
-    //cout << "error 2" << endl; 
-    Driver driver; 
-    Driver tools[6]; 
+    //cout << "error 2" << endl;  
     Game game; 
+    setCompTools(); 
     int points = 100; 
     string patientName;
     string line;  
@@ -248,6 +276,8 @@ void Driver::startgame(string surgeonName,int surgeonYear)
     Patient John;  
     Patient Samantha; 
     Patient Charles; 
+
+    cout << tools[0].getToolName() << endl; 
 
         ifstream theFile; 
         theFile.open("patientinfo.txt"); 
@@ -378,7 +408,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
 
     //TASK I 
     cout << "First prep the patient by cleaning area directly above their sternum, and make initial incisions in the chest." << endl; 
-    driver.displayGrandMenu(); 
+    displayGrandMenu(); 
     cout << "Chose your option:" << endl; 
     cin >> opt;
     while (opt == 4 || opt == 5)
@@ -402,7 +432,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
                     cout << "Unable to get status." << endl; 
             }
 
-                driver.displayGrandMenu(); 
+                displayGrandMenu(); 
                 cout << "Chose your option:" << endl; 
                 cin >> opt;
 
@@ -428,13 +458,19 @@ void Driver::startgame(string surgeonName,int surgeonYear)
             theFile.close(); 
         }
 
-            driver.displayGrandMenu(); 
+            displayGrandMenu(); 
             cout << "Chose your option:" << endl; 
             cin >> opt; 
     }
+
+     if(opt == 6)
+    {
+        return; 
+    }
+
     if(opt == 1)
     {   
-        driver.chooseMenu(opt);
+        chooseMenu(opt);
         points = points + 5; 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
@@ -482,7 +518,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
 
     //TASK 1 
     cout << "Choose the correct action to start the cutting and extraction of the grafts." << endl; 
-    driver.displayGrandMenu(); 
+    displayGrandMenu(); 
     cout << "Chose your option:" << endl; 
     cin >> opt; 
     while (opt == 4 || opt == 5)
@@ -506,7 +542,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
                     cout << "Unable to get status." << endl; 
             }
 
-                driver.displayGrandMenu(); 
+                displayGrandMenu(); 
                 cout << "Chose your option:" << endl; 
                 cin >> opt;
 
@@ -532,13 +568,13 @@ void Driver::startgame(string surgeonName,int surgeonYear)
             theFile.close(); 
         }
 
-            driver.displayGrandMenu(); 
+            displayGrandMenu(); 
             cout << "Chose your option:" << endl; 
             cin >> opt; 
     }
     if(opt == 2)
     {   
-        driver.chooseMenu(opt);
+        chooseMenu(opt);
         points = points + 5; 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
@@ -587,7 +623,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
 
     //TASK 1 
     cout << "Now that the grafts have been put into place, stitcht the patient back up." << endl; 
-    driver.displayGrandMenu(); 
+    displayGrandMenu(); 
     cout << "Chose your option:" << endl; 
     cin >> opt; 
         while (opt == 4 || opt == 5)
@@ -611,7 +647,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
                     cout << "Unable to get status." << endl; 
             }
 
-                driver.displayGrandMenu(); 
+                displayGrandMenu(); 
                 cout << "Chose your option:" << endl; 
                 cin >> opt;
 
@@ -637,13 +673,13 @@ void Driver::startgame(string surgeonName,int surgeonYear)
             theFile.close(); 
         }
 
-            driver.displayGrandMenu(); 
+            displayGrandMenu(); 
             cout << "Chose your option:" << endl; 
             cin >> opt; 
     }
     if(opt == 3)
     {   
-        driver.chooseMenu(opt);
+        chooseMenu(opt);
         points = points + 5; 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
@@ -734,31 +770,31 @@ void Driver::startgame(string surgeonName,int surgeonYear)
          case 1: 
             if(John.getlifepoints() + points >= 300)
             {
-                driver.successStorage(surgeonName,patientName,surgeonYear); 
+                successStorage(surgeonName,patientName,surgeonYear); 
             }
             else
             { 
-                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+                failureStorage(surgeonName,patientName,surgeonYear); 
             }; 
             break; 
         case 2: 
             if(Samantha.getlifepoints() + points >= 400)
             {
-                driver.successStorage(surgeonName,patientName,surgeonYear); 
+                successStorage(surgeonName,patientName,surgeonYear); 
             }
             else
             {
-                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+                failureStorage(surgeonName,patientName,surgeonYear); 
             }; 
             break; 
         case 3: 
             if(Charles.getlifepoints() + points >= 500)
             {
-                driver.successStorage(surgeonName,patientName,surgeonYear); 
+               successStorage(surgeonName,patientName,surgeonYear); 
             }
             else
             {
-                driver.failureStorage(surgeonName,patientName,surgeonYear); 
+                failureStorage(surgeonName,patientName,surgeonYear); 
             }; 
             break; 
 
@@ -778,4 +814,7 @@ void Driver::startgame(string surgeonName,int surgeonYear)
    }
 
 }
+
+//cctype
+//lowercase compare 
 

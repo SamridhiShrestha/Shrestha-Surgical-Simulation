@@ -33,7 +33,7 @@ class Device{
         void setBattery(int curBattOne); 
         void setPowerLevel(int powerLvl); 
         
-        void setCompTools(); 
+
         void displayDeviceStats(); //This will print out the stats for display for the device 
         
 

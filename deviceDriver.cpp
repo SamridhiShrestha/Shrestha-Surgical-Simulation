@@ -7,8 +7,10 @@
 // This is where we are defining all of our components 
 #include "device.h"
 #include <iostream>
+#include <fstream> 
 #include <string>
 using namespace std;
+
 
     //Constructors:
 
@@ -74,21 +76,7 @@ using namespace std;
         {
             power = powerLvl; 
         }
-
-        void Device::setCompTools()
-        {
-
-        int Cap = 6; 
-        Device tools[Cap];
-        tools[0] = Device("Sanitary Wipe Wand",1,1,1);
-        tools[1] = Device("Suction Instrument",1,1,1);
-        tools[2] = Device("Bipolacr Instrument",1,1,1);
-        tools[3] = Device("Monopolar Instrument",1,1,1);
-        tools[4] = Device("Clip Appliers",1,1,1);
-        tools[5] = Device("Needle Drivers",1,1,1);
-
-        }
-
+        
         void Device::displayDeviceStats()
         {
             cout << "---Device Stats---" << endl; 

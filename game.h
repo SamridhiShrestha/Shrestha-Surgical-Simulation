@@ -25,8 +25,8 @@ class Game{
     bool complicationUnscramble( int stage); 
     bool complicationFacts( int stage); 
 
-    bool complicationBattery(int tool);
-    bool complicationPower(int tool);  
+    // bool complicationBattery(int tool);
+    // bool complicationPower(int tool);  
         
 
 };
