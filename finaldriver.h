@@ -35,7 +35,7 @@ class Driver{
         void displayCleanMenu(); 
         void displayCutMenu(); 
         void displayStitchMenu(); 
-        void chooseMenu(int opt); 
+        int chooseMenu(int opt); 
 
         int randomNum(); 
 

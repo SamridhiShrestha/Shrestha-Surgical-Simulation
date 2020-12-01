@@ -7,8 +7,7 @@
 // This is where we are defining all of our components 
 #include "finaldriver.h" // Include header file
 #include "patient.h"
-//#include "time.h"
-//#include "device.h"
+#include "device.h"
 #include "move.h"
 #include "game.h"
 #include <iostream>
@@ -22,6 +21,7 @@
 
 using namespace std;
 
+//Function to print out the last 15 variables 
 vector<string> returnLast15(string fn)
 {
         vector <string> fileResult; 
@@ -127,28 +127,24 @@ Driver::Driver()
     // Empty constructor for all of theses values for they have pre-set values 
 } 
 
-     void Driver::setCompTools()
-        {
+void Driver::setCompTools()
+{
 
-        string line; 
-        ifstream useFile; 
-        int count = 0; 
-        useFile.open("deviceinfo.txt"); 
-        while(getline(useFile, line))
+    string line; 
+    ifstream useFile; 
+    int count = 0; 
+    useFile.open("deviceinfo.txt"); 
+    while(getline(useFile, line))
         {
             
             string finaltools[4]; 
             split(line,',',finaltools,4); 
-            for(int i = 0; i < 4; i++ )
-            {
-                cout << finaltools[i] << endl; 
-            }
             tools[count] = Device(finaltools[0], stoi(finaltools[1]), stoi(finaltools[2]), stoi(finaltools[3])); 
             count++; 
 
         }
 
-        }
+}
 
 void Driver::successStorage(string surgeonName,string patient, int surgeonYear)
 {
@@ -211,7 +207,7 @@ void Driver::displayStitchMenu()
     cout << "2)Needle Drivers" << endl;  
 }
 
-void Driver::chooseMenu(int opt)
+int Driver::chooseMenu(int opt)
 {
     Driver menu; 
     Move move; 
@@ -224,6 +220,7 @@ void Driver::chooseMenu(int opt)
         cout << "Which tool would you like to use?" << endl; 
         cin >> tool; 
         move.cleanMove(); 
+        return tool; 
         break; 
 
         case 2: 
@@ -231,6 +228,7 @@ void Driver::chooseMenu(int opt)
         cout << "Which tool would you like to use?" << endl; 
         cin >> tool; 
         move.cutMove(); 
+        return tool; 
         break; 
 
         case 3: 
@@ -238,6 +236,7 @@ void Driver::chooseMenu(int opt)
         cout << "Which tool would you like to use?" << endl; 
         cin >> tool; 
         move.stitchMove(); 
+        return tool; 
         break; 
 
         case 6: 
@@ -253,332 +252,386 @@ void Driver::chooseMenu(int opt)
 }
 
 
-void Driver::startgame(string surgeonName,int surgeonYear)
+void Driver::startgame(string surgeonName,int surgeonYear) // This is the main start game componenent that the main.cpp runs through 
 {
-    //cout << "error 2" << endl;  
+
+    // This is where we are implementing an array of objects from the Device Class into the Driver Class 
+    setCompTools();
+
+    //We are calling the Game class - Holds our complication mini games 
     Game game; 
-    setCompTools(); 
-    int points = 100; 
-    string patientName;
-    string line;  
-    int opt; 
-    bool complication = true; 
-    int stage = 0; 
 
-    string tempOne[5]; 
-    int tempTwo[4]; 
-
-    int temp; 
-    int index = 0; 
-    
-// exit(0); 
-
+    //We are calling the Patient class - Holds all of our individual patient info + reads from file
     Patient John;  
     Patient Samantha; 
     Patient Charles; 
+    
+    // We are declaring strings to store different values 
+    string patientName;
+    string line;  
+    string tempOne[5];
 
-    cout << tools[0].getToolName() << endl; 
+    // We are declaring int values to store different values 
+    int opt; 
+    int points = 100; 
+    int stage = 0; 
+    int tempTwo[4]; 
+    int temp; 
+    int index = 0; 
+    
+    //We are declaring our bool value to check for complications 
+    bool complication = true; 
+    bool success = false; 
 
+        // We are now first opening the file patientinfo.txt and reading the stored patient info
         ifstream theFile; 
-        theFile.open("patientinfo.txt"); 
-        //cout << "error 3" << endl;
+        theFile.open("patientinfo.txt"); // Opening the file 
 
-        if(theFile.is_open())
+        if(theFile.is_open()) // Checking if the file is open 
         {
-            //cout << "error 4" << endl;
-                while(getline(theFile,line))
+                while(getline(theFile,line)) // Iterating through the file 
             {
             
-            //cout << "error 5" << endl;
-                split(line, ',', tempOne, 4); 
-                //cout << "error 6" << endl;
+                split(line, ',', tempOne, 4); // Splitting each of the lines in the file 
 
-                for(int i = 1; i < 4; i++)
+                for(int i = 1; i < 4; i++)  
                 {
-                //Here we are turning values that were originally stored as strings into integer ratings 
-                tempTwo[i-1] = stoi(tempOne[i]);
-                //cout << "error 7" << endl;
+                // This loop helps to store the first index in the original array as a string
+                // We then store the values that follow as integer values 
+                tempTwo[i-1] = stoi(tempOne[i]); // Converting from string to int 
                 }
 
-                if(index == 0)
+                if(index == 0) // Stored in line 0 
                 {
-                    John.setpatientName(tempOne[0]); 
-                    John.setlifepoints(tempTwo[0]); 
+                    // Setting all of the components for the patient John using those two different arrays
+                    John.setpatientName(tempOne[0]); // First Array 
+                    John.setlifepoints(tempTwo[0]); // Second Array 
                     John.setage(tempTwo[1]); 
                     John.setheartRate(tempTwo[2]); 
                     John.setoxygenLevel(tempTwo[3]); 
                 }
-                else if(index == 1)
+                else if(index == 1) // Stored in line 1
                 {
-                    Samantha.setpatientName(tempOne[0]); 
-                    Samantha.setlifepoints(tempTwo[0]); 
+                    // Setting all of the components for the patient Samantha using those two different arrays
+                    Samantha.setpatientName(tempOne[0]); // First Array 
+                    Samantha.setlifepoints(tempTwo[0]); // Second Array 
                     Samantha.setage(tempTwo[1]); 
                     Samantha.setheartRate(tempTwo[2]); 
                     Samantha.setoxygenLevel(tempTwo[3]); 
                 }
-                else 
+                else // Stored in line 2 
                 {
-                    Charles.setpatientName(tempOne[0]); 
-                    Charles.setlifepoints(tempTwo[0]); 
+                    // Setting all of the components for the patient Charles using those two different arrays
+                    Charles.setpatientName(tempOne[0]); // First Array 
+                    Charles.setlifepoints(tempTwo[0]); // Second Array 
                     Charles.setage(tempTwo[1]); 
                     Charles.setheartRate(tempTwo[2]); 
                     Charles.setoxygenLevel(tempTwo[3]); 
                 }
                     
 
-                index++; 
+                index++; // We are counting the index or the line we are on here
 
 
             }
 
             
-        }else 
+        }
+        else 
         {
-            cout << "bad" << endl; 
+            // If the file does not open they need to contact the game creator (Samridhi Shrestha)
+            cout << "File was not able to open. Please contact game creator." << endl; 
+
         }
 
+        // We are now closing the file after all of the info has been read and stored
         theFile.close(); 
-        //Read the file using get line turn the line into a string 
-        //Use split function to break apart the string 
 
+    // First prompt the surgeon and tell them what surgical procedure they will be doing
+    // We will be using the surgeon name that we had captured earlier 
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
+    cout << "Hello, Dr. " << surgeonName << " today you have been given the difficult task of perfoming a Coronary Artery Bypass surgery." << endl; 
+    cout << "Coronary Artery Bypass surgery is a surgical procedure that restores normal blood flow to a previously obstructed coronary artery." << endl; 
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
 
-
-    //First prompt the surgeon and tell them what they will be doing in this surgery
-    cout << "Hello, Dr. " << surgeonName << " today you have been given the task of perfoming a coronary artery bypass surgery." << endl; 
-    cout << "Coronary artery bypass surgery is a surgical procedure that restores normal blood flow to a previously" << endl; 
-    cout << "obstructed coronary artery." << endl; 
-
-    //Now we will allow for them to choose from the option of three patients
+    //Now we will allow for them to choose from the option of three patients depending on their skill level
     int optionPat; 
     cout << "We will allow you to choose which patient you wish to treat. We hope that you are aware of your ability level and choose wisely." << endl; 
     cout << "--------------Patient List--------------" << endl; 
-    cout << "1)John Williams (Easy) " << endl; 
-    cout << "2)Samantha Westworrow (Medium) " << endl; 
-    cout << "3)Charles Collier (Difficutl) " << endl; 
+    cout << "1)John Williams (Easy) " << endl; // Points needed to win : 
+    cout << "2)Samantha Westworrow (Medium) " << endl; // Points needed to win : 
+    cout << "3)Charles Collier (Difficutl) " << endl; // Points needed to win: 
     cout << "----------------------------------------" << endl; 
     cout << "Enter the number of your chosen patient: "; 
-    cin >> optionPat;  
+    cin >> optionPat; // Choosing the patient input 
     cout << endl; 
     
-    //Now we will read from the file and display the patient stats and information 
+    // User Error Check 
+    // while(optionPat != 1 || optionPat != 2 || optionPat != 3)
+    // {
+    // cout << "We will allow you to choose which patient you wish to treat. We hope that you are aware of your ability level and choose wisely." << endl; 
+    // cout << "--------------Patient List--------------" << endl; 
+    // cout << "1)John Williams (Easy) " << endl; // Points needed to win : 
+    // cout << "2)Samantha Westworrow (Medium) " << endl; // Points needed to win : 
+    // cout << "3)Charles Collier (Difficutl) " << endl; // Points needed to win: 
+    // cout << "----------------------------------------" << endl; 
+    // cout << "Enter the number of your chosen patient: "; 
+    // cin >> optionPat; // Choosing the patient input 
+    // cout << endl; 
+    // }
+
+    //Now we will read from the file and display the initial 
     switch(optionPat)
     {
         case 1: 
-        
+        //Displaying the main patient profile for John Williams
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: John Williams" << endl; 
-        John.displayPatientProfile(); 
-        patientName = "John";
+        cout << "Points needed to win: " << endl; 
+        John.displayPatientProfile(); // Calling the patient profile display 
+        patientName = "John"; // We are storing this as the permanent patient name for this run 
         cout << "----------------------------------------" << endl; 
 
         break; 
 
         case 2: 
-
+        //Displaying the main patient profile for Samantha Westworrow 
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: Samantha Westworrow" << endl; 
-        Samantha.displayPatientProfile(); 
-        patientName = "Samantha";
+        cout << "Points needed to win: " << endl; 
+        Samantha.displayPatientProfile(); // Calling the patient profile display 
+        patientName = "Samantha"; // We are storing this as the permanent patient name for this run 
         cout << "----------------------------------------" << endl; 
         break; 
 
         case 3: 
-
+        //Displaying the main patient profile for Charles Collier 
         cout << "----------------------------------------" << endl; 
         cout << "Patient Profile: Charles Collier" << endl; 
-        Charles.displayPatientProfile(); 
-        patientName = "Charles";
+        cout << "Points needed to win: " << endl; 
+        Charles.displayPatientProfile(); // Calling the patient profile display 
+        patientName = "Charles"; // We are storing this as the permanent patient name for this run 
         cout << "----------------------------------------" << endl; 
         break; 
 
         default: 
 
         cout << "You did not enter a valid value. Good Bye!" << endl; 
-
+        return; // This will terminate the progream 
 
     }
 
-    // S   T   A   G   E        O   N   E ------------------------------------------
-    slowPrint(200000, "+++++ S T A G E  O N E +++++\n");
-    stage = 1; 
-    cout << " We must first prepare the patient for general anesthesia and cleanse the area, then" << endl;
-    cout << " prepare the arteries for surgery and extract the appropriate veins " << endl; 
-    cout << "We will be using the veins as bypass grafts, and the heart of the patient will have to be stopped" << endl; 
-
+    // S   T   A   G   E        O   N   E ------------------------------------------ 
+    //My timeline is broken down into three stages that the surgery is broken down into, verified by TA (Gabrielle Johnson + Elizabeth Spaulding)
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
+    slowPrint(200000, "+++++ S T A G E  O N E +++++\n"); // This is a function that I made to slowly print out the text to signify timeline
+    stage = 1; // Changing stage value 
+    cout << "We must first prepare the patient for general anesthesia and cleanse the area, then prepare the arteries for precisde extraction." << endl; 
+    cout << "We will be using the veins as bypass grafts, and the heart of the patient will have to be stopped for this portion of the surgery." << endl; 
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
 
     //TASK I 
-    cout << "First prep the patient by cleaning area directly above their sternum, and make initial incisions in the chest." << endl; 
-    displayGrandMenu(); 
-    cout << "Chose your option:" << endl; 
-    cin >> opt;
-    while (opt == 4 || opt == 5)
+    slowPrint(200000, "+++++ T A S K  O N E +++++\n"); //Slow print function call 
+    cout << "First, prep the patient by cleaning area directly above their sternum, and make initial incisions in the chest." << endl; 
+    displayGrandMenu(); // We are displaying the grand menu for the very first time and calling it here
+    cout << "Chose your option:" << endl; // Prompting user to choose the right action 
+    cin >> opt; // Input user 
+
+    while (opt == 4 || opt == 5) // These options bring up either the patient status + Overarching tool key for game
     {
-        if(opt == 4)
+        if(opt == 4) // Patient Status Option 
         {
         
-            switch(optionPat)
+            switch(optionPat) // Choosing which patient depending on initial user input for optionPat 
             {
                 case 1: 
-                    John.displayPatientStatus(); 
+                    John.displayPatientStatus(); // John Status 
                     break; 
                 case 2: 
-                    Samantha.displayPatientStatus(); 
+                    Samantha.displayPatientStatus(); // Samantha Status 
                     break; 
                 case 3: 
-                    Charles.displayPatientStatus(); 
+                    Charles.displayPatientStatus(); // Charles Status
                     break; 
 
                 default: 
                     cout << "Unable to get status." << endl; 
             }
 
-                displayGrandMenu(); 
+                displayGrandMenu();  // Reiterating the grand menu to choose action 
                 cout << "Chose your option:" << endl; 
-                cin >> opt;
+                cin >> opt; // Prompting input 
 
         }
 
-        if(opt == 5)
+        if(opt == 5) // This option will read you the tool key that I have stored under toolkey.txt
         {
         
             ifstream theFile; 
-            theFile.open("toolKey.txt"); 
-            //cout << "error 3" << endl;
+            theFile.open("toolKey.txt"); // Opening the toolkey.txt
 
-            if(theFile.is_open())
+            if(theFile.is_open()) // Checking if the file is open or not 
             {
-                //cout << "error 4" << endl;
-                while(getline(theFile,line))
+                while(getline(theFile,line)) // Reading each indiviudal line in the txt file 
                 {
-                    cout << line << endl; 
+                    cout << line << endl; // Printing out the file contents 
                 
                 }
             }
 
-            theFile.close(); 
+            theFile.close(); // Closing the file 
         }
 
-            displayGrandMenu(); 
-            cout << "Chose your option:" << endl; 
-            cin >> opt; 
+            displayGrandMenu(); // Displaying the grand menu again 
+            cout << "Chose your option:" << endl;  
+            cin >> opt; // User input option 
     }
 
-     if(opt == 6)
+     if(opt == 6) // This will terminate the game given that the user chooses to do so 
     {
         return; 
     }
 
-    if(opt == 1)
+    if(opt == 1) // This is the correct option and therefore you will gain points for choosing this input 
     {   
         chooseMenu(opt);
-        points = points + 5; 
+        if(chooseMenu(opt) == 1)
+        {
+             points = points + 5; // If they choose the more powerful tool they will get 5 points
+        }
+        else 
+        {
+             points = points + 2; // If they choose the less powerful tool they will get 2 points
+        }
+        points = points + 5; // Adding point value 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
-    else 
+    
+    if (opt == 2 || opt == 3) // There are incorrect options and therefore you will lose points for this input 
     {
         cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
-        points = points - 5; 
+        points = points - 5; // Subtracting point value 
     }
+    
      
     // COMPLICATION 1 
-    cout << "You have run into your first complication and patient is now unstable. " << endl; 
-    cout << "Please complete the complication task to restabilize the patient" << endl; 
-    int comp = game.randomVal(10,25); 
+    slowPrint(200000, "+++++ C O M P L I C A T I O N  A L E R T +++++\n"); //Slow print function call 
+    //Prompt the patient and notify them that they are facing a complication
+    cout << "Oh no! You have run into your first complication. You have found a blood clot and patient is now unstable. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient and extract the clot from the patient." << endl; 
+    int comp = game.randomVal(10,25); // This will give us a random value that will help us determine which mini game to give the user
 
-    if(comp >= 6)
+    if(comp >= 6) // If the rand value is greater than 6 
     {
-        complication = game.complicationMath(stage); 
+        complication = game.complicationMath(stage); // They get a math question 
     }
-    else if (comp < 6 && comp >= 3)
+    else if (comp < 6 && comp >= 3) // If the rand value is less than 6 but greater than 3 
     {
-        complication = game.complicationUnscramble(stage); 
+        complication = game.complicationUnscramble(stage); // They get an unscramble question 
     }
-    else 
+    else // All other numerical events 
     {
-        complication = game.complicationFacts(stage); 
+        complication = game.complicationFacts(stage); // They get a true or false question 
     }
 
     // END STATEMENT 
     if(complication == false)
     {
-        cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!" << endl; 
-        points = points + 2; 
+        cout << "Congratulations! You were able to restabilize the patient and no complication points were deducted! (+5pts)" << endl; 
+        points = points + 5; // Adding points 
     }
     else 
     {
-        cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
-        points = points - 10; 
+        cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted. (-10pts)" << endl;
+        points = points - 10; // Deducting points 
     }
-
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
     // S   T   A   G   E        T   W   O ------------------------------------------
-    slowPrint(200000, "+++++ S T A G E  T W O +++++\n");
-    stage = 2; 
-    cout << "Next you must now put the bypass grafts in the appropriate places and attach the graft" << endl; 
-    cout << "from the incision below the blocked artery to the incision made in the aorta." << endl; 
-
+    slowPrint(200000, "+++++ S T A G E  T W O +++++\n"); // Initiate second stage of my timeline + slowPrint call
+    stage = 2; // Changing the stage 
+    cout << "Next, you must now put the bypass grafts in the appropriate places and attach the graft to the correct incisions on the patient." << endl; 
+    cout << "Technically speaking this means the incision below the blocked artery to the incision made in the aorta." << endl; 
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
     //TASK 1 
-    cout << "Choose the correct action to start the cutting and extraction of the grafts." << endl; 
-    displayGrandMenu(); 
-    cout << "Chose your option:" << endl; 
-    cin >> opt; 
-    while (opt == 4 || opt == 5)
+     slowPrint(200000, "+++++ T A S K  T W O +++++\n"); //Slow print function call 
+    cout << "Choose the correct action to start cutting into the sternum and moving the grafts to the appropriate place." << endl; 
+    displayGrandMenu(); // We are displaying the grand menu for the very first time and calling it here
+    cout << "Chose your option:" << endl; // Prompting user to choose the right action 
+    cin >> opt;  // Input user 
+    while (opt == 4 || opt == 5)// These options bring up either the patient status + Overarching tool key for game
     {
-        if(opt == 4)
+        if(opt == 4)// Patient Status Option 
         {
         
-            switch(optionPat)
+            switch(optionPat)// Choosing which patient depending on initial user input for optionPat 
             {
                 case 1: 
-                    John.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    John.displayPatientStatus(); // Display Status 
                     break; 
                 case 2: 
-                    Samantha.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    Samantha.displayPatientStatus(); // Display Status 
                     break; 
                 case 3: 
-                    Charles.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    Charles.displayPatientStatus(); // Display Status 
                     break; 
 
                 default: 
                     cout << "Unable to get status." << endl; 
             }
 
-                displayGrandMenu(); 
+                displayGrandMenu(); // Reiterating the grand menu to choose action 
                 cout << "Chose your option:" << endl; 
-                cin >> opt;
+                cin >> opt; // Prompting input 
 
         }
 
-        if(opt == 5)
+        if(opt == 5) // This option will read you the tool key that I have stored under toolkey.txt
         {
         
             ifstream theFile; 
-            theFile.open("toolKey.txt"); 
-            //cout << "error 3" << endl;
+            theFile.open("toolKey.txt"); // Opening the toolkey.txt
 
-            if(theFile.is_open())
+            if(theFile.is_open()) // Checking if the file is open or not 
             {
-                //cout << "error 4" << endl;
-                while(getline(theFile,line))
+                while(getline(theFile,line)) // Reading each indiviudal line in the txt file 
                 {
-                    cout << line << endl; 
+                    cout << line << endl; // Printing out the file contents 
                 
                 }
             }
 
-            theFile.close(); 
+            theFile.close(); // Closing the file 
         }
 
-            displayGrandMenu(); 
-            cout << "Chose your option:" << endl; 
-            cin >> opt; 
+            displayGrandMenu(); // Displaying the grand menu again 
+            cout << "Chose your option:" << endl;  
+            cin >> opt; // User input option 
     }
-    if(opt == 2)
+
+     if(opt == 6) // This will terminate the game given that the user chooses to do so 
+    {
+        return; 
+    }
+
+    if(opt == 2) // This is the correct option and therefore you will gain points for choosing this input 
     {   
         chooseMenu(opt);
-        points = points + 5; 
+        if(chooseMenu(opt) == 1)
+        {
+             points = points + 5; // If they choose the more powerful tool they will get 5 points
+        }
+        else 
+        {
+             points = points + 2; // If they choose the less powerful tool they will get 2 points
+        }
+        points = points + 5; // Adding point value 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
-    else 
+    
+    if(opt == 1 || opt == 3)// There are incorrect options and therefore you will lose points for this input 
     {
         cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
         points = points - 5; 
@@ -586,36 +639,39 @@ void Driver::startgame(string surgeonName,int surgeonYear)
 
 
     // COMPLICATION 1 
-    cout << "You have run into your second complication and patient is now unstable. " << endl; 
-    cout << "Please complete the complication task to restabilize the patient" << endl; 
-    comp = game.randomVal(10,25); 
+    slowPrint(200000, "+++++ C O M P L I C A T I O N  A L E R T +++++\n"); //Slow print function call 
+    cout << "You have run into your second complication and now there is too much foreign material found in the patient. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient and clean up the material." << endl; 
+    comp = game.randomVal(10,25); // This will give us a random value that will help us determine which mini game to give the user
 
-    if(comp >= 6)
+    if(comp >= 6) // If the rand value is greater than 6 
     {
-        complication = game.complicationMath(stage); 
+        complication = game.complicationMath(stage); // They get a math question 
     }
-    else if (comp < 6 && comp >= 3)
+    else if (comp < 6 && comp >= 3) // If the rand value is less than 6 but greater than 3 
     {
-        complication = game.complicationUnscramble(stage); 
+        complication = game.complicationUnscramble(stage); // They get an unscramble question 
     }
-    else 
+    else // All other numerical events 
     {
-        complication = game.complicationFacts(stage); 
+        complication = game.complicationFacts(stage); // They get a true or false question 
     }
 
+    // END STATEMENT  
     if(complication == false)
     {
         cout << "Congratulations! You were able to restabilize the patient and no complication points for deducted!" << endl; 
-        points = points + 2; 
+        points = points + 5; // Adding points 
     }
     else 
     {
         cout << "Unfortunately, you were not able to restabilize the patient and as penalty 10 points will be deducted." << endl;
-        points = points - 10; 
+        points = points - 10; // Deducting points 
     }
 
 
     // S   T   A   G   E        T   H   R   E   E ------------------------------------------
+    cout << "----------------------------------------------------------------------------------------------------------------------------------" << endl; 
     slowPrint(200000, "+++++ S T A G E  T H R E E +++++\n");
     stage = 3; 
     cout << "Lastly, you must enclose the correct pacing wire and chest tubing within the sternum " << endl; 
@@ -626,70 +682,87 @@ void Driver::startgame(string surgeonName,int surgeonYear)
     displayGrandMenu(); 
     cout << "Chose your option:" << endl; 
     cin >> opt; 
-        while (opt == 4 || opt == 5)
+    while (opt == 4 || opt == 5)// These options bring up either the patient status + Overarching tool key for game
     {
-        if(opt == 4)
+        if(opt == 4)// Patient Status Option 
         {
         
-            switch(optionPat)
+            switch(optionPat)// Choosing which patient depending on initial user input for optionPat 
             {
                 case 1: 
-                    John.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    John.displayPatientStatus(); // Display Status 
                     break; 
                 case 2: 
-                    Samantha.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    Samantha.displayPatientStatus(); // Display Status 
                     break; 
                 case 3: 
-                    Charles.displayPatientStatus(); 
+                    John.setlifepoints(John.getlifepoints() + points); // Updating the point values in the event that they check patient status
+                    Charles.displayPatientStatus(); // Display Status 
                     break; 
 
                 default: 
                     cout << "Unable to get status." << endl; 
             }
 
-                displayGrandMenu(); 
+                displayGrandMenu(); // Reiterating the grand menu to choose action 
                 cout << "Chose your option:" << endl; 
-                cin >> opt;
+                cin >> opt; // Prompting input 
 
         }
 
-        if(opt == 5)
+        if(opt == 5) // This option will read you the tool key that I have stored under toolkey.txt
         {
         
             ifstream theFile; 
-            theFile.open("toolKey.txt"); 
-            //cout << "error 3" << endl;
+            theFile.open("toolKey.txt"); // Opening the toolkey.txt
 
-            if(theFile.is_open())
+            if(theFile.is_open()) // Checking if the file is open or not 
             {
-                //cout << "error 4" << endl;
-                while(getline(theFile,line))
+                while(getline(theFile,line)) // Reading each indiviudal line in the txt file 
                 {
-                    cout << line << endl; 
+                    cout << line << endl; // Printing out the file contents 
                 
                 }
             }
 
-            theFile.close(); 
+            theFile.close(); // Closing the file 
         }
 
-            displayGrandMenu(); 
-            cout << "Chose your option:" << endl; 
-            cin >> opt; 
+            displayGrandMenu(); // Displaying the grand menu again 
+            cout << "Chose your option:" << endl;  
+            cin >> opt; // User input option 
     }
-    if(opt == 3)
+
+     if(opt == 6) // This will terminate the game given that the user chooses to do so 
+    {
+        return; 
+    }
+
+    if(opt == 3) // This is the correct option and therefore you will gain points for choosing this input 
     {   
         chooseMenu(opt);
-        points = points + 5; 
+        if(chooseMenu(opt) == 1)
+        {
+             points = points + 5; // If they choose the more powerful tool they will get 5 points
+        }
+        else 
+        {
+             points = points + 2; // If they choose the less powerful tool they will get 2 points
+        }
+        points = points + 5; // Adding point value 
         cout << "Success! You chose the right action for this task! (+5pts)" << endl; 
     }
-    else
+    
+    if(opt == 1 || opt == 2)// There are incorrect options and therefore you will lose points for this input 
     {
         cout << "Failure, you chose the incorrect action for this task. (-5pts)" << endl; 
         points = points - 5; 
     }
 
     // COMPLICATION 1 
+    slowPrint(200000, "+++++ C O M P L I C A T I O N  A L E R T +++++\n"); //Slow print function call 
     cout << "You have run into your first complication and patient is now unstable. " << endl; 
     cout << "Please complete the complication task to restabilize the patient" << endl; 
     comp = game.randomVal(10,25);
@@ -720,8 +793,8 @@ void Driver::startgame(string surgeonName,int surgeonYear)
     }
 
     // DEVICE COMPLICATION 2
-    // cout << "You have run into a device complication and patient is now unstable. " << endl; 
-    // cout << "Please complete the complication task to restabilize the patient" << endl; 
+    cout << "You have run into a device complication and patient is now unstable. " << endl; 
+    cout << "Please complete the complication task to restabilize the patient" << endl; 
 
     // if(devComp >= 6)
     // {
